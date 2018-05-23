@@ -1,4 +1,4 @@
-#Android 系统的权限申请管理
+# Android 系统的权限申请管理
 
 我是站在巨人的肩膀上修改的东西，感谢[tbruyelle](https://github.com/tbruyelle/RxPermissions)，我没有具体改动逻辑，我只是enchance
 
