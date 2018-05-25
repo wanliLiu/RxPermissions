@@ -38,6 +38,6 @@ ext {
     targetSdkVersion = 27
 
     //lib push to jcenter version
-    VERSION_NAME = "1.0.0"
+    VERSION_NAME = "1.0.1"
     GROUP = "com.soli.lib"
 }
