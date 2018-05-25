@@ -1,4 +1,11 @@
 # Android 系统的权限申请管理
+[![License](https://img.shields.io/badge/license-Apache%202-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Download](https://api.bintray.com/packages/soli/maven/rxpermissions/images/download.svg) ](https://bintray.com/soli/maven/rxpermissions/_latestVersion)
+
+# How to use it
+```
+implementation 'com.soli.lib:rxpermissions:1.0.1'
+```
 
 我是站在巨人的肩膀上修改的东西，感谢[tbruyelle](https://github.com/tbruyelle/RxPermissions)，我没有具体改动逻辑，我只是enchance
 
