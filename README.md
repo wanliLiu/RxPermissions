@@ -7,6 +7,8 @@
 implementation 'com.soli.lib:rxpermissions:1.0.1'
 ```
 
+# Something about this project
+
 我是站在巨人的肩膀上修改的东西，感谢[tbruyelle](https://github.com/tbruyelle/RxPermissions)，我没有具体改动逻辑，我只是enchance
 
  我改动的地方，应该说添加的功能
