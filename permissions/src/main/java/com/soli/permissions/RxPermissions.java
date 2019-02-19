@@ -45,34 +45,40 @@ public class RxPermissions {
      * @param activity
      */
     public RxPermissions(@NonNull Activity activity) {
-        mRxPermissionsFragment = getRxPermissionsFragment(activity);
+        mRxPermissionsFragment = getRxPermissionsFragment(((FragmentActivity) activity).getSupportFragmentManager());
     }
 
     /**
-     * @param activity
+     * @param manager
+     */
+    public RxPermissions(FragmentManager manager) {
+        mRxPermissionsFragment = getRxPermissionsFragment(manager);
+    }
+
+    /**
+     * @param manager
      * @return
      */
-    private RxPermissionsFragment getRxPermissionsFragment(Activity activity) {
-        RxPermissionsFragment rxPermissionsFragment = findRxPermissionsFragment(activity);
+    private RxPermissionsFragment getRxPermissionsFragment(FragmentManager manager) {
+        RxPermissionsFragment rxPermissionsFragment = findRxPermissionsFragment(manager);
         boolean isNewInstance = rxPermissionsFragment == null;
         if (isNewInstance) {
             rxPermissionsFragment = new RxPermissionsFragment();
-            FragmentManager fragmentManager = ((FragmentActivity) activity).getSupportFragmentManager();
-            fragmentManager
+            manager
                     .beginTransaction()
                     .add(rxPermissionsFragment, TAG)
                     .commitAllowingStateLoss();
-            fragmentManager.executePendingTransactions();
+            manager.executePendingTransactions();
         }
         return rxPermissionsFragment;
     }
 
     /**
-     * @param activity
+     * @param manager
      * @return
      */
-    private RxPermissionsFragment findRxPermissionsFragment(Activity activity) {
-        return (RxPermissionsFragment) ((FragmentActivity) activity).getSupportFragmentManager().findFragmentByTag(TAG);
+    private RxPermissionsFragment findRxPermissionsFragment(FragmentManager manager) {
+        return (RxPermissionsFragment) manager.findFragmentByTag(TAG);
     }
 
     /**
@@ -93,23 +99,20 @@ public class RxPermissions {
         return upstream -> request(upstream, permissions)
                 // Transform Observable<Permission> to Observable<Boolean>
                 .buffer(permissions.length)
-                .flatMap(new Function<List<Permission>, ObservableSource<Boolean>>() {
-                    @Override
-                    public ObservableSource<Boolean> apply(@NonNull List<Permission> permissions1) throws Exception {
-                        if (permissions1.isEmpty()) {
-                            // Occurs during orientation change, when the subject receives onComplete.
-                            // In that case we don't want to propagate that empty list to the
-                            // subscriber, only the onComplete.
-                            return Observable.empty();
-                        }
-                        // Return true if all permissions are granted.
-                        for (Permission p : permissions1) {
-                            if (!p.granted) {
-                                return Observable.just(false);
-                            }
-                        }
-                        return Observable.just(true);
+                .flatMap((Function<List<Permission>, ObservableSource<Boolean>>) permissions1 -> {
+                    if (permissions1.isEmpty()) {
+                        // Occurs during orientation change, when the subject receives onComplete.
+                        // In that case we don't want to propagate that empty list to the
+                        // subscriber, only the onComplete.
+                        return Observable.empty();
                     }
+                    // Return true if all permissions are granted.
+                    for (Permission p : permissions1) {
+                        if (!p.granted) {
+                            return Observable.just(false);
+                        }
+                    }
+                    return Observable.just(true);
                 });
     }
 
@@ -151,12 +154,7 @@ public class RxPermissions {
             throw new IllegalArgumentException("RxPermissions.request/requestEach requires at least one input permission");
         }
         return oneOf(trigger, pending(permissions))
-                .flatMap(new Function<Object, Observable<Permission>>() {
-                    @Override
-                    public Observable<Permission> apply(Object o) throws Exception {
-                        return requestImplementation(permissions);
-                    }
-                });
+                .flatMap((Function<Object, Observable<Permission>>) o -> requestImplementation(permissions));
     }
 
     private Observable<?> pending(final String... permissions) {

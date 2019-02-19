@@ -1,6 +1,7 @@
 package soli.rxpermissions
 
 import android.Manifest
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
@@ -20,8 +21,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun requestPermissions() {
-        rxPermissions.request(
-                Manifest.permission.CAMERA,
+        val temp = rxPermissions.request(
                 Manifest.permission.SYSTEM_ALERT_WINDOW,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.BODY_SENSORS,
@@ -30,10 +30,14 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.SEND_SMS,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.WRITE_CONTACTS,
-                Manifest.permission.RECORD_AUDIO,
+
                 Manifest.permission.WRITE_SETTINGS)
                 .subscribe { pass ->
                     Toast.makeText(this@MainActivity, if (pass) "所有申请成功" else "没有都通过", Toast.LENGTH_LONG).show()
+
+                    if (pass) {
+                        startActivity(Intent(this@MainActivity, FragmentTestActivity::class.java))
+                    }
                 }
 
     }

@@ -239,16 +239,20 @@ public class RxPermissionsFragment extends Fragment {
         String[] requestPermissions = new String[length];
         int[] requestGrantResults = new int[length];
 
-        for (int i = 0; i < shouldShowRequestPermissionRationale.length; i++) {
-            if (i >= permissions.size()) {
-                shouldShowRequestPermissionRationale[i] = false;
-                requestPermissions[i] = specialpermissions.get(i - permissions.size());
-                requestGrantResults[i] = specialGrantResult[i - permissions.size()];
-            } else {
-                shouldShowRequestPermissionRationale[i] = ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions.get(i));
-                requestPermissions[i] = permissions.get(i);
-                requestGrantResults[i] = grantResults[i];
+        try {
+            for (int i = 0; i < shouldShowRequestPermissionRationale.length; i++) {
+                if (i >= permissions.size()) {
+                    shouldShowRequestPermissionRationale[i] = false;
+                    requestPermissions[i] = specialpermissions.get(i - permissions.size());
+                    requestGrantResults[i] = specialGrantResult[i - permissions.size()];
+                } else {
+                    shouldShowRequestPermissionRationale[i] = ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions.get(i));
+                    requestPermissions[i] = permissions.get(i);
+                    requestGrantResults[i] = grantResults[i];
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         onRequestPermissionsResult(DangerousPermissions_request_code, requestPermissions, requestGrantResults, shouldShowRequestPermissionRationale);
