@@ -72,7 +72,6 @@ public class RxPermissions implements LifecycleEventObserver {
 
     @Override
     public void onStateChanged(@androidx.annotation.NonNull LifecycleOwner source, @androidx.annotation.NonNull Lifecycle.Event event) {
-        Log.e("onStateChanged", source.getClass().getSimpleName() + "--->" + event.name());
         if (event == Lifecycle.Event.ON_DESTROY) {
             source.getLifecycle().removeObserver(this);
             manager = null;
