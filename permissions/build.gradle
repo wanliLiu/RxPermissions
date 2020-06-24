@@ -28,9 +28,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "com.android.support:appcompat-v7:${supportLibraryVersion}"
-    api "io.reactivex.rxjava2:rxjava:latest.release"
-    api "io.reactivex.rxjava2:rxandroid:latest.release"
+    compileOnly 'androidx.appcompat:appcompat:1.1.0'
+    api "io.reactivex.rxjava2:rxjava:2.2.19"
+    api "io.reactivex.rxjava2:rxandroid:2.1.1"
 }
 
 apply from: rootProject.file('publish/release.gradle')

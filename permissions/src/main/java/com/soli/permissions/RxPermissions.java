@@ -15,11 +15,16 @@
 package com.soli.permissions;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.os.Build;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,31 +40,52 @@ import io.reactivex.subjects.PublishSubject;
  * @author soli
  * @Time 2018/5/23 22:27
  */
-public class RxPermissions {
+public class RxPermissions implements LifecycleEventObserver {
 
-    static final Object TRIGGER = new Object();
+    private final Object TRIGGER = new Object();
     static final String TAG = "RxPermissions";
-    RxPermissionsFragment mRxPermissionsFragment;
+    private RxPermissionsFragment mRxPermissionsFragment;
+    private FragmentManager manager;
 
     /**
      * @param activity
      */
-    public RxPermissions(@NonNull Activity activity) {
-        mRxPermissionsFragment = getRxPermissionsFragment(((FragmentActivity) activity).getSupportFragmentManager());
+    public RxPermissions(@NonNull AppCompatActivity activity) {
+        addLifeCycleListener(activity);
+        mRxPermissionsFragment = getRxPermissionsFragment(((AppCompatActivity) activity).getSupportFragmentManager());
     }
 
     /**
-     * @param manager
+     * @param fragment
      */
-    public RxPermissions(FragmentManager manager) {
-        mRxPermissionsFragment = getRxPermissionsFragment(manager);
+    public RxPermissions(Fragment fragment) {
+        addLifeCycleListener(fragment);
+        mRxPermissionsFragment = getRxPermissionsFragment(fragment.getChildFragmentManager());
     }
 
     /**
-     * @param manager
+     * @param source
+     */
+    private void addLifeCycleListener(LifecycleOwner source) {
+        source.getLifecycle().addObserver(this);
+    }
+
+    @Override
+    public void onStateChanged(@androidx.annotation.NonNull LifecycleOwner source, @androidx.annotation.NonNull Lifecycle.Event event) {
+        Log.e("onStateChanged", source.getClass().getSimpleName() + "--->" + event.name());
+        if (event == Lifecycle.Event.ON_DESTROY) {
+            source.getLifecycle().removeObserver(this);
+            manager = null;
+            mRxPermissionsFragment = null;
+        }
+    }
+
+    /**
+     * @param mManger
      * @return
      */
-    private RxPermissionsFragment getRxPermissionsFragment(FragmentManager manager) {
+    private RxPermissionsFragment getRxPermissionsFragment(FragmentManager mManger) {
+        manager = mManger;
         RxPermissionsFragment rxPermissionsFragment = findRxPermissionsFragment(manager);
         boolean isNewInstance = rxPermissionsFragment == null;
         if (isNewInstance) {

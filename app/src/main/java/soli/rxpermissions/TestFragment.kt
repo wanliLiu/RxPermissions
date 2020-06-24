@@ -2,11 +2,11 @@ package soli.rxpermissions
 
 import android.Manifest
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.soli.permissions.RxPermissions
 import kotlinx.android.synthetic.main.activity_fragment_test.*
 
@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_fragment_test.*
  */
 class TestFragment : Fragment() {
 
-    private val rxPermissions by lazy { RxPermissions(childFragmentManager) }
+    private val rxPermissions by lazy { RxPermissions(this) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_fragment_test, null)
