@@ -8,6 +8,6 @@ echo "BINTRAY_API_KEY：$BINTRAY_API_KEY"
 
 ./gradlew clean build bintrayUpload
 
-#./gradlew -P repositoryUrl=file://C://Users/Soli/.m2/repository uploadArchives
+#./gradlew -P repositoryUrl=file:~/Documents/project/m2/repository uploadArchives
 #
 #./gradlew -P repositoryUrl=file://D://AndroidStudio/sdk/extras/taihe/m2repository/ uploadArchives
